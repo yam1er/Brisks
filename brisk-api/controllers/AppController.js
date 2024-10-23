@@ -19,7 +19,7 @@ class AppController {
           method: 'GET',
           url: 'https://sandboxapi.bitnob.co/api/v1/wallets/payout/rate/USD',
           headers: {accept: 'application/json'},
-          Authorization: 'Bearer API-KEY'
+          Authorization: 'Bearer xxxxx'
         };
         axios
         .request(options)

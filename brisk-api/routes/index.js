@@ -1,5 +1,6 @@
 import express from 'express';
 import AppController from '../controllers/AppController.js';
+import UserController from '../controllers/UserController.js';
 
 const router = express.Router();
 
@@ -17,6 +18,10 @@ router.get('/about', (req, res) => {
 
 router.get('/bitcoin', (req, res) => {
     AppController.bitcoinprice(req, res);
+})
+
+router.get('/users', (req, res) => {
+    UserController.getUsers(req, res);
 })
 
 export default router;
