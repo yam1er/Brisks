@@ -8,7 +8,7 @@ class DBClient {
         this.client = new MongoClient(url, { useUnifiedTogology: true });
         this.DB_DATABASE = process.env.DB_DATABASE || 'briks_db';
         this.connexion = false;
-        this.connectToDB();
+        this.connectionToDB();
     }
 
     async connectionToDB() {
@@ -39,8 +39,8 @@ class DBClient {
 
     async nbUsers() {
         const users = this.db.collection('users');
-        const nbUsers = await users.countDocuments({});
-        return nbUsers;
+        const nb= await users.countDocuments({});
+        return nb;
     }
 }
 

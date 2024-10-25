@@ -1,4 +1,4 @@
-import redis, { RedisClient } from 'redis';
+import redis from 'redis';
 import { promisify } from 'util';
 
 class RedisClient {
@@ -7,6 +7,7 @@ class RedisClient {
         this.custumGet = promisify(this.client.get).bind(this.client);
         this.client.on('error', (error) => console.log('Error', error.message));
         this.client.on('connect', () => {
+            this.client.ready = true
             console.log('Successfully connected');
         })
     }
