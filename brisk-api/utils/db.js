@@ -6,7 +6,7 @@ class DBClient {
         const DB_PORT = process.env.PORT || '27017';
         const url = `mongodb://${DB_HOST}:${DB_PORT}`;
         this.client = new MongoClient(url, { useUnifiedTogology: true });
-        this.DB_DATABASE = process.env.DB_DATABASE || 'briks_db';
+        this.DB_DATABASE = process.env.DB_DATABASE || 'brisk_db';
         this.connexion = false;
         this.connectionToDB();
     }
@@ -16,6 +16,7 @@ class DBClient {
             await this.client.connect();
             this.connexion = true;
             this.db = this.client.db(this.DB_DATABASE);
+            console.log('Connected to db');
         } catch (err) {
             console.log('Connexion failed. Error :', err);
         }
@@ -38,9 +39,15 @@ class DBClient {
     }
 
     async nbUsers() {
-        const users = this.db.collection('users');
-        const nb= await users.countDocuments({});
+        const usersCollection = this.db.collection('users');
+        const nb = await usersCollection.countDocuments({});
         return nb;
+    }
+
+    async getUser(query) {
+        const usersCollection = this.db.collection('users');
+        const user = await usersCollection.findOne(query);
+        return user;
     }
 }
 

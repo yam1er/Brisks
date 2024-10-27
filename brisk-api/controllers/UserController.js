@@ -1,3 +1,5 @@
+import dbClient from "../utils/db";
+
 class UserController {
     static getUsers(req, res) {
         res.status(200).send('We are users');
