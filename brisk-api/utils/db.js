@@ -27,15 +27,17 @@ class DBClient {
     }
 
     async addUser(email, password) {
-        const users = this.db.collection('users');
-        const user = await users.insertOne({ email, password });
-        return user.ops[0];
+        const usersCollection = this.db.collection('users');
+        await usersCollection.insertOne({ email, password });
+        const user = await this.getUser({ email });
+        return user;
     }
 
     async getUsers() {
-        const users = this.db.collection('users');
-        const user = await users.findMany();
-        return user;
+        const usersCollection = this.db.collection('users');
+        const users = await usersCollection.find({});
+        console.log(users);
+        return 1;
     }
 
     async nbUsers() {

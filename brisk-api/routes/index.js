@@ -29,6 +29,10 @@ router.get('/users', (req, res) => {
     UserController.getUsers(req, res);
 })
 
+router.post('/users', (req, res) => {
+    UserController.postNew(req, res);
+})
+
 router.post('/login', (req, res) => {
     AuthController.getConnected(req, res);
 })
