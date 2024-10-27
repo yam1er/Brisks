@@ -16,7 +16,6 @@ class DBClient {
             await this.client.connect();
             this.connexion = true;
             this.db = this.client.db(this.DB_DATABASE);
-            console.log('Connected to db');
         } catch (err) {
             console.log('Connexion failed. Error :', err);
         }
