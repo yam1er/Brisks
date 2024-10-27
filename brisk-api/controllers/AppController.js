@@ -1,17 +1,23 @@
 import axios from 'axios';
+import dbClient from '../utils/db';
 
 class AppController {
 
+    static async getStat(req, res) {
+        const nbUsers = await dbClient.nbUsers();
+        console.log(nbUsers);
+        return res.json({ nbUsers });
+    }
     static home(req, res) {
         res.send('Hello Brisk...');
     }
 
     static hello(req, res) {
-        res.status(200).send('Hello Word');
+        res.send('Hello Word');
     }
 
     static about(req, res) {
-        res.status(200).send('I am about');
+        res.send('I am about');
     }
 
     static bitcoinprice(req, res) {
@@ -25,10 +31,10 @@ class AppController {
         .request(options)
         .then(function (response) {
           console.log('Hello Bitcoiners hihihi');
-          //res.status(200).send(response.data);
+          res.sendStatus(200).send(response.data);
         })
-        .catch(function (error) {
-          console.error('Some error');
+        .catch(function () {
+          console.log('Some error');
         });
     }
 }
