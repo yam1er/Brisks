@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 class DBClient {
     constructor() {
-        const DB_HOST = process.env.HOST || 'localhost';
+        const DB_HOST = process.env.HOST || '127.0.0.1';
         const DB_PORT = process.env.PORT || '27017';
         const url = `mongodb://${DB_HOST}:${DB_PORT}`;
         this.client = new MongoClient(url, { useUnifiedTogology: true });
@@ -29,7 +29,7 @@ class DBClient {
         const usersCollection = this.db.collection('users');
         await usersCollection.insertOne({ email, password });
         const user = await this.getUser({ email });
-        return user;
+        return { id: user._id, email: user.email };
     }
 
     async getUsers() {
