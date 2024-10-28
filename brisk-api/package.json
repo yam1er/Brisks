@@ -19,6 +19,7 @@
         "bull": "^3.16.0",
         "chai-http": "^4.3.0",
         "express": "^4.17.1",
+        "express-session": "^1.18.1",
         "image-thumbnail": "^1.0.10",
         "jsonwebtoken": "^9.0.2",
         "mime-types": "^2.1.27",
@@ -26,6 +27,8 @@
         "redis": "^2.8.0",
         "require": "^2.4.20",
         "sha1": "^1.1.1",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
         "uuid": "^8.2.0"
     },
     "devDependencies": {

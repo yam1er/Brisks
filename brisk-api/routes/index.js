@@ -8,21 +8,31 @@ const SECRET_KEY = '123456789';
 
 const router = express.Router();
 
-const authenticateJWT = (req, res, next) => {
-    const token = req.headers.authorization;
-    if (token) {
-        jwt.verify(token, SECRET_KEY, (err, user) => {
-            if (err) {
-                console.log(err.message);
-                return res.sendStatus(403);
-            }
-            req.user = user;
-            next();
-        });
+// const authenticateJWT = (req, res, next) => {
+//     const token = req.headers.authorization;
+//     if (token) {
+//         jwt.verify(token, SECRET_KEY, (err, user) => {
+//             if (err) {
+//                 console.log(err.message);
+//                 return res.sendStatus(403);
+//             }
+//             req.user = user;
+//             next();
+//         });
+//     } else {
+//         res.sendStatus(401);
+//     }
+// }
+
+const authenticateSession = (req, res, next) => {
+    console.log(req.session);
+    if (req.session.userId) {
+        next();
     } else {
         res.sendStatus(401);
     }
 }
+
 
 router.get('/', (req, res) => {
     AppController.home(req, res);
@@ -32,7 +42,7 @@ router.get('/stats', (req, res) => {
     AppController.getStat(req, res);
 })
 
-router.get('/hello', authenticateJWT, (req, res) => {
+router.get('/hello', authenticateSession, (req, res) => {
     AppController.hello(req, res);
 })
 
