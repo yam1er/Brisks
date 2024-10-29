@@ -5,11 +5,13 @@ class AppController {
 
     static async getStat(req, res) {
         const nbUsers = await dbClient.nbUsers();
-        console.log(nbUsers);
         return res.json({ nbUsers });
     }
     static home(req, res) {
-        res.send('Hello Brisk...');
+        return res.json({ 
+          Message: 'Welcome To Brisk API',
+          Docs: '/api-docs'
+        });
     }
 
     static hello(req, res) {
@@ -17,7 +19,7 @@ class AppController {
     }
 
     static about(req, res) {
-        res.send('I am about');
+        return res.json({ About: 'This is being built by AL and Yam for better access to bitcoin'});
     }
 
     static bitcoinprice(req, res) {
