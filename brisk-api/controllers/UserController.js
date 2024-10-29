@@ -1,10 +1,18 @@
 import dbClient from "../utils/db";
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+import { ObjectId } from 'mongodb';
+
 
 class UserController {
     static async getUsers(req, res) {
         const users = await dbClient.getUsers()
         res.json(users);
+    }
+
+    static async getUser(req, res) {
+        const id = req.params.id;
+        const user = await dbClient.getUser({ _id: ObjectId(id) });
+        res.json(user);
     }
 
     static async postNew(req, res) {
