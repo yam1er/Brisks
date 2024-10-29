@@ -34,9 +34,8 @@ class DBClient {
 
     async getUsers() {
         const usersCollection = this.db.collection('users');
-        const users = await usersCollection.find({});
-        console.log(users);
-        return 1;
+        const users = await usersCollection.find({}).toArray();
+        return users;
     }
 
     async nbUsers() {

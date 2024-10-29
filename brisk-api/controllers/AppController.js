@@ -23,7 +23,7 @@ class AppController {
     static bitcoinprice(req, res) {
         const options = {
           method: 'GET',
-          url: 'https://sandboxapi.bitnob.co/api/v1/wallets/payout/rate/USD',
+          url: 'https://api.bitnob.co/api/v1/wallets/payout/rate/USD',
           headers: {accept: 'application/json'},
           Authorization: 'Bearer xxxxx'
         };
@@ -33,8 +33,8 @@ class AppController {
           console.log('Hello Bitcoiners hihihi');
           res.sendStatus(200).send(response.data);
         })
-        .catch(function () {
-          console.log('Some error');
+        .catch(function (err) {
+          console.log('Some error', err);
         });
     }
 }
