@@ -35,7 +35,7 @@ class UserController {
             } else {
                 hashed_password = hashed;
                 const newUser = await dbClient.addUser(email, hashed);
-                res.json(newUser);
+                res.status(201).json(newUser);
             }
         })
     }

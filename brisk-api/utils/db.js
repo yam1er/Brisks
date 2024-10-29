@@ -16,6 +16,8 @@ class DBClient {
             await this.client.connect();
             this.connexion = true;
             this.db = this.client.db(this.DB_DATABASE);
+            this.usersCollection = this.db.collection('users');
+            this.transactionsCollection = this.db.collection('transactions');
         } catch (err) {
             console.log('Connexion failed. Error :', err);
         }
@@ -26,28 +28,34 @@ class DBClient {
     }
 
     async addUser(email, password) {
-        const usersCollection = this.db.collection('users');
-        await usersCollection.insertOne({ email, password });
+        await this.usersCollection.insertOne({ email, password });
         const user = await this.getUser({ email });
         return { id: user._id, email: user.email };
     }
 
     async getUsers() {
-        const usersCollection = this.db.collection('users');
-        const users = await usersCollection.find({}).toArray();
+        const users = await this.usersCollection.find({}).toArray();
         return users;
     }
 
     async nbUsers() {
-        const usersCollection = this.db.collection('users');
-        const nb = await usersCollection.countDocuments({});
+        const nb = await this.usersCollection.countDocuments({});
         return nb;
     }
 
     async getUser(query) {
-        const usersCollection = this.db.collection('users');
-        const user = await usersCollection.findOne(query);
+        const user = await this.usersCollection.findOne(query);
         return user;
+    }
+
+    async getTransactions() {
+        const transactions = await this.transactionsCollection.find({}).toArray();
+        return transactions;
+    }
+
+    async getTransaction(query) {
+        const transaction = await this.transactionsCollection.findOne(query);
+        return transaction;
     }
 }
 
