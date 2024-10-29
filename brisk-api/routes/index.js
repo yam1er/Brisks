@@ -25,7 +25,6 @@ const router = express.Router();
 // }
 
 const authenticateSession = (req, res, next) => {
-    console.log(req.session);
     if (req.session.userId) {
         next();
     } else {
@@ -97,10 +96,17 @@ router.get('/users', (req, res) => {
  * @swagger
  * /users/:id:
  *  get:
- *     summary: Get a user with id
+ *     summary: get a user with id
  *     description: Get the details of a user with user id
  *     tags:
  *       - Users
+ *     parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            description: user id
+ *            schema:
+ *              type: string
  *     responses:
  *         200:
  *             description: The user of id id
@@ -110,48 +116,42 @@ router.get('/users/:id', (req, res) => {
 })
 
 /**
- * 
- *  components:
- *      schemas:
- *          User:
- *              type: object,
- *              properties:
- *                  id:
- *                      type: integer
- *                  username:
- *                      type: string
- */
-
-/**
  * @swagger
  * /users:
- *  post:
- *     summary: Add new user
- *     description: Add new user to the database
+ *   post:
+ *     summary: Create a new user
+ *     description: Creates a new user with the provided information.
  *     tags:
  *       - Users
  *     requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          username:
- *                              type: string
- *                              description: The user's username
- *                          email:
- *                              type: string
- *                              description: The user's email
- *                          password:
- *                                  type: string
- *                                  description: The user's password
- *                      required:
- *                          - email
- *                          - password
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *                 - email
+ *             properties:
+ *                 password:
+ *                    type: string
+ *                 email:
+ *                    type: string
  *     responses:
- *         200:
- *             description: User added succesfully
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: The user ID
+ *                 username:
+ *                   type: string
+ *                   description: The user's username
+ *       400:
+ *         description: Bad request
  */
 router.post('/users', (req, res) => {
     UserController.postNew(req, res);
