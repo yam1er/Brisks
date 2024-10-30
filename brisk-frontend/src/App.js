@@ -7,6 +7,7 @@ function App() {
             <Switch>
                 <Route path="/login" component={Login} />
                 <Route path="/create-account" component={CreateAccount} />
+		<Route path="/transactions-history" component={TransactionHistory} />
             </Switch>
         </Router>
     );
