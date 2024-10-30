@@ -15,8 +15,11 @@ class TransactionController {
 
     static async postNew(req, res) {
         const userId = req.session.userId;
-        console.log(userId);
-        res.json({ yo: 'yo' });
+        const date = new Date();
+        const { satAmount, fiatAmount, invoice } = req.body;
+        const trx = { satAmount, fiatAmount, invoice, userId, date };
+        const transaction = await dbClient.addTransaction(trx);
+        res.status(201).json(transaction);
     }
 }
 

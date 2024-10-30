@@ -62,7 +62,7 @@ transactionsRouter.get('/transactions/:id', auth.authenticateSession, (req, res)
  *         400:
  *             description: Transaction
  */
-transactionsRouter.post('/transactions', (req, res) => {
+transactionsRouter.post('/transactions', auth.authenticateSession, (req, res) => {
     TransactionController.postNew(req, res);
 })
 

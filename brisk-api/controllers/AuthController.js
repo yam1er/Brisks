@@ -17,7 +17,7 @@ class AuthController {
         }
     }
 
-    static async getConnected(req, res) {
+    static async getConnect(req, res) {
         const { email, password } = req.body;
         const user = await dbClient.getUser({ email });
         if (user && bcrypt.compareSync(password, user.password)) {
@@ -26,6 +26,11 @@ class AuthController {
         } else {
             res.status(401).send('Unauthorized');
         }
+    }
+
+    static getDisconnect(req, res) {
+        req.session.userId = '';
+        res.sendStatus(204);
     }
 }
 

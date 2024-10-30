@@ -4,6 +4,44 @@ import AuthController from "../controllers/AuthController";
 
 
 const usersRouter = express.Router();
+const auth = new AuthController();
+
+/**
+ * @swagger
+ * /connect:
+ *  get:
+ *      summary: Authenticate user
+ *      description: Use this endpoint to authenticate user with email and password in req body
+ *      tags:
+ *          - General
+ *      responses:
+ *          201:
+ *              description: User successfully connected
+ *          401:
+ *              description: User not found
+ */
+usersRouter.get('/connect', (req, res) => {
+    AuthController.getConnect(req, res);
+})
+
+/**
+ * @swagger
+ * /disconnect:
+ *  get:
+ *      summary: Disconnect the connected user
+ *      description: Use this endpoint to disconnect the connected user
+ *      tags:
+ *          - General
+ *      responses:
+ *          204:
+ *              description: User successfully disconnected
+ *          401:
+ *              description: User not found
+ */
+usersRouter.get('/disconnect', auth.authenticateSession, (req, res) => {
+    AuthController.getDisconnect(req, res);
+})
+
 /**
  * @swagger
  * /users:
@@ -85,24 +123,6 @@ usersRouter.get('/users/:id', (req, res) => {
  */
 usersRouter.post('/users', (req, res) => {
     UserController.postNew(req, res);
-})
-
-/**
- * @swagger
- * /connect:
- *  post:
- *      summary: Authenticate user
- *      description: Use this endpoint to authenticate user with email and password in req body
- *      tags:
- *          - General
- *      responses:
- *          201:
- *              description: User successfully connected
- *          401:
- *              description: User not found
- */
-usersRouter.post('/connect', (req, res) => {
-    AuthController.getConnected(req, res);
 })
 
 export default usersRouter;

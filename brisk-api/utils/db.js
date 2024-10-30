@@ -48,6 +48,12 @@ class DBClient {
         return user;
     }
 
+    async addTransaction(query) {
+        const transaction = await this.transactionsCollection.insertOne(query);
+        //const user = await this.getUser({ email });
+        return transaction.ops;
+    }
+
     async getTransactions() {
         const transactions = await this.transactionsCollection.find({}).toArray();
         return transactions;
