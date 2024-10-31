@@ -18,6 +18,7 @@ class DBClient {
             this.db = this.client.db(this.DB_DATABASE);
             this.usersCollection = this.db.collection('users');
             this.transactionsCollection = this.db.collection('transactions');
+            this.invoicesCollection = this.db.collection('invoices');
         } catch (err) {
             console.log('Connexion failed. Error :', err);
         }
@@ -52,6 +53,11 @@ class DBClient {
         const transaction = await this.transactionsCollection.insertOne(query);
         //const user = await this.getUser({ email });
         return transaction.ops;
+    }
+
+    async addInvoice(query) {
+        const invoice = await this.invoicesCollection.insertOne(query);
+        return invoice.ops;
     }
 
     async getTransactions() {
