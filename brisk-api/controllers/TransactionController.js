@@ -21,6 +21,82 @@ class TransactionController {
         const transaction = await dbClient.addTransaction(trx);
         res.status(201).json(transaction);
     }
+
+    static async rates(req, res) {
+        const btcpayServerUrl = 'https://pay.withbitcoin.org';
+        const storeId = '34oobADDerGCzRrS6r7myPMzqVrtKNF96igdAoJs4o6c';
+        const apiKey = '8ba803c1005d54c8998e52f59398de07e69bce0a';
+        const apiEndpoint = `/api/rates?storeId=${storeId}`;
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: 'token ' + apiKey
+        }
+
+        fetch(btcpayServerUrl + apiEndpoint, {
+            method: 'GET',
+            headers: headers,
+        })
+        .then(response => response.json())
+        .then(data => {
+            const rate = data[0];
+            console.log(rate);
+            res.json(rate);
+        })
+    }
+
+    static async createInvoice(req, res) {
+        const btcpayServerUrl = 'https://pay.withbitcoin.org';
+        const storeId = '34oobADDerGCzRrS6r7myPMzqVrtKNF96igdAoJs4o6c';
+        const apiKey = '8ba803c1005d54c8998e52f59398de07e69bce0a';
+        const email = req.session.userEmail;
+        const currency = 'SATS';
+        const { amount, title = 'Payment', description = ' ' } = req.body;
+        let requestPayId = "";
+        let data = "";
+
+        let apiEndpoint = `/api/v1/stores/${storeId}/payment-requests`;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: 'token ' + apiKey
+        }
+        let payload = { amount, currency, title, email, description }
+
+        try {
+            const response = await fetch(btcpayServerUrl + apiEndpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+            data = await response.json();
+            requestPayId = data.id;
+        } catch (error) {
+            console.error('Error fetching:', error);
+        }
+
+        apiEndpoint = `/api/v1/stores/${storeId}/payment-requests/${requestPayId}/pay`;
+        payload = { amount };
+
+        try {
+            const response = await fetch(btcpayServerUrl + apiEndpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+            data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching:', error);
+        }
+
+        res.send({ invoice: data });
+    }
 }
 
 export default TransactionController;
