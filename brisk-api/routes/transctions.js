@@ -66,8 +66,12 @@ transactionsRouter.post('/transactions', auth.authenticateSession, (req, res) =>
     TransactionController.postNew(req, res);
 })
 
-transactionsRouter.post('/invoice', (req, res) => {
+transactionsRouter.post('/invoice', auth.authenticateSession, (req, res) => {
     TransactionController.createInvoice(req, res);
+})
+
+transactionsRouter.get('/rates', (req, res) => {
+    TransactionController.rates(req, res);
 })
 
 export default transactionsRouter;

@@ -22,56 +22,80 @@ class TransactionController {
         res.status(201).json(transaction);
     }
 
-    static async createInvoice(req, res) {
-        const btcpayServerUrl = 'https://pay.withbitcoin.org'
-        const storeId = '34oobADDerGCzRrS6r7myPMzqVrtKNF96igdAoJs4o6c'
-        const apiKey = '8ba803c1005d54c8998e52f59398de07e69bce0a'
-        const amount = 10
-        const currency = 'SATS'
-        const title = 'Yoyo'
-        const email = 'al@gmail.com'
-        let requestPayId = "";
+    static async rates(req, res) {
+        const btcpayServerUrl = 'https://pay.withbitcoin.org';
+        const storeId = '34oobADDerGCzRrS6r7myPMzqVrtKNF96igdAoJs4o6c';
+        const apiKey = '8ba803c1005d54c8998e52f59398de07e69bce0a';
+        const apiEndpoint = `/api/rates?storeId=${storeId}`;
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: 'token ' + apiKey
+        }
 
-        const apiEndpoint1 = `/api/v1/stores/${storeId}/payment-requests`;
-        const apiEndpoint2 = `/api/v1/stores/${storeId}/payment-requests/${requestPayId}/pay`;
-        const apiEndpoint3 = `/api/v1/stores/${storeId}/rates/BTC_XOF`;
+        fetch(btcpayServerUrl + apiEndpoint, {
+            method: 'GET',
+            headers: headers,
+        })
+        .then(response => response.json())
+        .then(data => {
+            const rate = data[0];
+            console.log(rate);
+            res.json(rate);
+        })
+    }
+
+    static async createInvoice(req, res) {
+        const btcpayServerUrl = 'https://pay.withbitcoin.org';
+        const storeId = '34oobADDerGCzRrS6r7myPMzqVrtKNF96igdAoJs4o6c';
+        const apiKey = '8ba803c1005d54c8998e52f59398de07e69bce0a';
+        const email = req.session.userEmail;
+        const currency = 'SATS';
+        const { amount, title = 'Payment', description = ' ' } = req.body;
+        let requestPayId = "";
+        let data = "";
+
+        let apiEndpoint = `/api/v1/stores/${storeId}/payment-requests`;
 
         const headers = {
             'Content-Type': 'application/json',
             Authorization: 'token ' + apiKey
         }
-        const payload = {
-            amount: amount,
-            currency: currency,
-            title,
-            email
-        }
-        
-        fetch(btcpayServerUrl + apiEndpoint3, {
-            method: 'GET',
-            headers: headers,
-            // body: JSON.stringify(payload)
-        })
-        .then(response => response)
-        .then(data => {
-            console.log(data);
-            // requestPayId = data.id;
-            // console.log(requestPayId);
-            res.json({ title });
-        })
+        let payload = { amount, currency, title, email, description }
 
-        // fetch(btcpayServerUrl + apiEndpoint2, {
-        //     method: 'POST',
-        //     headers: headers,
-        //     body: JSON.stringify(payload)
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log(data);
-        //     // requestPayId = data.id;
-        //     // console.log(requestPayId);
-        //     res.json({ title });
-        // })
+        try {
+            const response = await fetch(btcpayServerUrl + apiEndpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+            data = await response.json();
+            requestPayId = data.id;
+        } catch (error) {
+            console.error('Error fetching:', error);
+        }
+
+        apiEndpoint = `/api/v1/stores/${storeId}/payment-requests/${requestPayId}/pay`;
+        payload = { amount };
+
+        try {
+            const response = await fetch(btcpayServerUrl + apiEndpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+            data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching:', error);
+        }
+
+        res.send({ invoice: data });
     }
 }
 

@@ -22,6 +22,7 @@ class AuthController {
         const user = await dbClient.getUser({ email });
         if (user && bcrypt.compareSync(password, user.password)) {
             req.session.userId = user._id;
+            req.session.userEmail = user.email;
             res.send('Logged in');
         } else {
             res.status(401).send('Unauthorized');
