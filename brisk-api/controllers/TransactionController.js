@@ -50,7 +50,7 @@ class TransactionController {
         const apiKey = '8ba803c1005d54c8998e52f59398de07e69bce0a';
         const email = req.session.userEmail;
         const currency = 'SATS';
-        const { amount, title = 'Payment', description = ' ' } = req.body;
+        const { amount, title, description } = req.body;
         let requestPayId = "";
         let data = "";
 
@@ -69,16 +69,16 @@ class TransactionController {
                 body: JSON.stringify(payload)
             });
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
+                throw new Error(`Error 1: ${response.status} ${response.statusText}`);
             }
             data = await response.json();
             requestPayId = data.id;
         } catch (error) {
-            console.error('Error fetching:', error);
+            console.error('Error fetching 1:', error);
         }
 
         apiEndpoint = `/api/v1/stores/${storeId}/payment-requests/${requestPayId}/pay`;
-        payload = { amount };
+        //payload = { amount, currency, title, email, description };
 
         try {
             const response = await fetch(btcpayServerUrl + apiEndpoint, {
@@ -86,16 +86,17 @@ class TransactionController {
                 headers: headers,
                 body: JSON.stringify(payload)
             });
+            console.log(response);
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
+                throw new Error(`Error 2: ${response.status} ${response.statusText}`);
             }
             data = await response.json();
             console.log(data);
         } catch (error) {
-            console.error('Error fetching:', error);
+            console.error('Error fetching 2:', error);
         }
-
-        res.send({ invoice: data });
+        const invoice = dbClient.addInvoice({ userId: req.session.userId, invoice: data });
+        res.status(201).send(invoice);
     }
 }
 
