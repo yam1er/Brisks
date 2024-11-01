@@ -77,26 +77,28 @@ class TransactionController {
             console.error('Error fetching 1:', error);
         }
 
-        apiEndpoint = `/api/v1/stores/${storeId}/payment-requests/${requestPayId}/pay`;
-        //payload = { amount, currency, title, email, description };
+        res.status(201).send({ requestPayId });
 
-        try {
-            const response = await fetch(btcpayServerUrl + apiEndpoint, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(payload)
-            });
-            console.log(response);
-            if (!response.ok) {
-                throw new Error(`Error 2: ${response.status} ${response.statusText}`);
-            }
-            data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error('Error fetching 2:', error);
-        }
-        const invoice = dbClient.addInvoice({ userId: req.session.userId, invoice: data });
-        res.status(201).send(invoice);
+        // apiEndpoint = `/api/v1/stores/${storeId}/payment-requests/${requestPayId}/pay`;
+        // payload = { amount, currency, title, email, description };
+
+        // try {
+        //     const response = await fetch(btcpayServerUrl + apiEndpoint, {
+        //         method: 'POST',
+        //         headers: headers,
+        //         body: JSON.stringify(payload)
+        //     });
+        //     console.log(response);
+        //     if (!response.ok) {
+        //         throw new Error(`Error 2: ${response.status} ${response.statusText}`);
+        //     }
+        //     data = await response.json();
+        //     console.log(data);
+        // } catch (error) {
+        //     console.error('Error fetching 2:', error);
+        // }
+        // const invoice = dbClient.addInvoice({ userId: req.session.userId, invoice: data });
+        // res.status(201).send(invoice);
     }
 }
 
