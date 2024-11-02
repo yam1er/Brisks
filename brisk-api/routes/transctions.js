@@ -66,10 +66,38 @@ transactionsRouter.post('/transactions', auth.authenticateSession, (req, res) =>
     TransactionController.postNew(req, res);
 })
 
-transactionsRouter.post('/invoice', auth.authenticateSession, (req, res) => {
+/**
+ * @swagger
+ * /invoices:
+ *  post:
+ *     summary: Create new invoice
+ *     description: create new invoice
+ *     tags:
+ *       - Invoices
+ *     responses:
+ *         201:
+ *             description: Invoice created successfully
+ *         400:
+ *             description: Invoice not created
+ */
+transactionsRouter.post('/invoices', auth.authenticateSession, (req, res) => {
     TransactionController.createInvoice(req, res);
 })
 
+/**
+ * @swagger
+ * /rates:
+ *  get:
+ *     summary: Get Bitcoin rates
+ *     description: Get Bitcoin rates
+ *     tags:
+ *       - Rates
+ *     responses:
+ *         200:
+ *             description: Rates retrieved successfully
+ *         400:
+ *             description: Failed
+ */
 transactionsRouter.get('/rates', (req, res) => {
     TransactionController.rates(req, res);
 })

@@ -51,7 +51,6 @@ class TransactionController {
         const email = req.session.userEmail;
         const currency = 'SATS';
         const { amount, title, description } = req.body;
-        let requestPayId = "";
         let data = "";
 
         const apiEndpoint = `/api/v1/stores/${storeId}/payment-requests`;
@@ -60,28 +59,18 @@ class TransactionController {
             'Content-Type': 'application/json',
             Authorization: 'token ' + apiKey
         }
-        let payload = { amount, currency, title, email, description }
-
-        try {
-            const response = await fetch(btcpayServerUrl + apiEndpoint, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) {
-                throw new Error(`Error 1: ${response.status} ${response.statusText}`);
+        let payload = {
+            amount,
+            currency,
+            title,
+            email,
+            description,
+            checkout: {
+                checkoutType: 'V2'
             }
-            data = await response.json();
-            requestPayId = data.id;
-        } catch (error) {
-            console.error('Error fetching 1:', error);
         }
 
-        // res.status(201).send({ requestPayId });
-
-        const apiEndpoint2 = `/api/v1/stores/${storeId}/payment-requests/${requestPayId}/pay`;
-        
-        payload = { amount };
+        const apiEndpoint2 = `/api/v1/stores/${storeId}/invoices`;
 
         try {
             const response = await fetch(btcpayServerUrl + apiEndpoint2, {
@@ -89,17 +78,17 @@ class TransactionController {
                 headers: headers,
                 body: JSON.stringify(payload)
             });
-            console.log(response);
             if (!response.ok) {
                 throw new Error(`Error 2: ${response.status} ${response.statusText}`);
             }
             data = await response.json();
-            console.log(data);
+            // console.log(data);
         } catch (error) {
             console.error('Error fetching 2:', error);
         }
-        const invoice = dbClient.addInvoice({ userId: req.session.userId, invoice: data });
-        res.status(201).send(invoice);
+        const invoice = await dbClient.addInvoice({ userId: req.session.userId, invoice: data });
+        console.log(invoice);
+        res.status(201).json(invoice);
     }
 }
 
