@@ -13,10 +13,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ 
     secret: '123456789',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
     cookie: {
-        maxAge: 1000 * 60 * 5
+        maxAge: 1000 * 60 * 60
     }
 }));
 app.use(router);

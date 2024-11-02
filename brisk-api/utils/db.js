@@ -57,7 +57,8 @@ class DBClient {
 
     async addInvoice(query) {
         const invoice = await this.invoicesCollection.insertOne(query);
-        return invoice.ops;
+        // console.log(invoice.ops[0]);
+        return invoice.ops[0];
     }
 
     async getTransactions() {
