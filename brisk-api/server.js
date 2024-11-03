@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import router from './routes/index.js';
 import transactionsRouter from './routes/transctions.js';
 import usersRouter from './routes/users.js';
@@ -19,6 +20,11 @@ app.use(session({
         maxAge: 1000 * 60 * 60
     }
 }));
+const corsOption = {
+    origin: 'http://localhost:3000',
+    optionsSuccesStatus: 200
+}
+app.use(cors());
 app.use(router);
 app.use(transactionsRouter);
 app.use(usersRouter);

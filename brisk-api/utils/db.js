@@ -29,13 +29,19 @@ class DBClient {
     }
 
     async addUser(email, password) {
-        await this.usersCollection.insertOne({ email, password });
+        const data = { email, password, storeName: email, balanceSat: 0, balanceFiat: 0 }
+        await this.usersCollection.insertOne(data);
         const user = await this.getUser({ email });
         return { id: user._id, email: user.email };
     }
 
     async getUsers() {
         const users = await this.usersCollection.find({}).toArray();
+        users.forEach(element => {
+            element.id = element._id;
+            delete element._id;
+            delete element.password;
+        });
         return users;
     }
 
@@ -51,13 +57,11 @@ class DBClient {
 
     async addTransaction(query) {
         const transaction = await this.transactionsCollection.insertOne(query);
-        //const user = await this.getUser({ email });
         return transaction.ops;
     }
 
     async addInvoice(query) {
         const invoice = await this.invoicesCollection.insertOne(query);
-        // console.log(invoice.ops[0]);
         return invoice.ops[0];
     }
 
