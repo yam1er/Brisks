@@ -57,6 +57,7 @@ router.get('/stats', auth.authenticateSession, (req, res) => {
     AppController.getStat(req, res);
 })
 
+// Bitcoin price
 router.get('/bitcoin', (req, res) => {
     AppController.bitcoinprice(req, res);
 })

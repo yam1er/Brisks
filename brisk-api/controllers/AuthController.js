@@ -23,7 +23,7 @@ class AuthController {
         if (user && bcrypt.compareSync(password, user.password)) {
             req.session.userId = user._id;
             req.session.userEmail = user.email;
-            res.send('Logged in');
+            res.status(200).json({ message: 'Logging Successful'});
         } else {
             res.status(401).send('Unauthorized');
         }
