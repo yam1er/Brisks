@@ -20,7 +20,7 @@ const auth = new AuthController();
  *          401:
  *              description: User not found
  */
-usersRouter.get('/connect', (req, res) => {
+usersRouter.post('/connect', (req, res) => {
     AuthController.getConnect(req, res);
 })
 
@@ -38,7 +38,7 @@ usersRouter.get('/connect', (req, res) => {
  *          401:
  *              description: User not found
  */
-usersRouter.get('/disconnect', auth.authenticateSession, (req, res) => {
+usersRouter.post('/disconnect', auth.authenticateSession, (req, res) => {
     AuthController.getDisconnect(req, res);
 })
 

@@ -13,6 +13,16 @@ class TransactionController {
         res.json(transaction);
     }
 
+    static async getInvoices(req, res) {
+        const invoices = await dbClient.getInvoices();
+        res.json(invoices);
+    }
+
+    static async getInvoice(req, res) {
+        const invoiceId = req.params.id;
+        const invoice = await dbClient.getInvoice({ _id: ObjectId(invoiceId) });
+    }
+
     static async postNew(req, res) {
         const userId = req.session.userId;
         const date = new Date();
@@ -82,7 +92,6 @@ class TransactionController {
                 throw new Error(`Error 2: ${response.status} ${response.statusText}`);
             }
             data = await response.json();
-            // console.log(data);
         } catch (error) {
             console.error('Error fetching 2:', error);
         }
