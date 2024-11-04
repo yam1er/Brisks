@@ -11,8 +11,8 @@ function Dashboard() {
     useEffect(() => {
         const fetchConversionRate = async () => {
             try {
-                const response = await axios.get('https://bitpay.com/api/rates/XOF');
-                const btcToXofRate = response.data.data.rate;
+                const response = await axios.get('http://brisk-api.alphonsemehounme.tech:3000/rates');
+                const btcToXofRate = response.data.rate;
                 const satoshiRate = btcToXofRate / 100000000; // Conversion BTC -> satoshi
                 setConversionRate(satoshiRate);
             } catch (error) {
@@ -41,20 +41,21 @@ function Dashboard() {
     const generatePaymentLink = () => {
         setShowPopup(true);
     };
+
     return (
         <div>
-            <h2>Conversion Dashboard</h2>
+            <h2>Dashboard</h2>
             <label>
-                Amount (XOF):
+                Amount (USD):
                 <input
                     type="number"
                     value={xof}
                     onChange={handleXofChange}
-                    placeholder="Enter amount in XOF"
+                    placeholder="Enter amount in USD"
                 />
             </label>
             <label>
-                Amount (Sat):
+                Amount (Satoshi):
                 <input
                     type="number"
                     value={satoshi}
@@ -68,9 +69,9 @@ function Dashboard() {
                 <div className="popup">
                     <div className="popup-content">
                         <h3>Payment link generated</h3>
-                        <p>Amount (XOF): {xof}</p>
-                        <p>Amount (Sat): {satoshi}</p>
-                        <button onClick={() => setShowPopup(false)}>close</button>
+                        <p>Amount (USD) : {xof}</p>
+                        <p>Amount (Satoshi) : {satoshi}</p>
+                        <button onClick={() => setShowPopup(false)}>Close</button>
                     </div>
                 </div>
             )}

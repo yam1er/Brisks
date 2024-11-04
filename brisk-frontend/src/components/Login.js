@@ -9,7 +9,7 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/connect', { email, password });
+            const response = await axios.post('http://brisk-api.alphonsemehounme.tech:3000/connect', { email, password });
             if (response.status === 201) {
                 console.log('Logged in successfully');
                 // Rediriger

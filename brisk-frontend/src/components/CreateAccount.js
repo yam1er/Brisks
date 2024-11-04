@@ -10,7 +10,7 @@ function CreateAccount() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/users', { email, password });
+            const response = await axios.post('http://brisk-api.alphonsemehounme.tech:3000/users', { email, password });
             if (response.status === 201) {
                 setSuccess('Account created successfully!');
             }
