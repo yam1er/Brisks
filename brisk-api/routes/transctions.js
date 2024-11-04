@@ -102,4 +102,41 @@ transactionsRouter.get('/rates', (req, res) => {
     TransactionController.rates(req, res);
 })
 
+/**
+ * @swagger
+ * /invoices:
+ *  get:
+ *     summary: Get invoices
+ *     description: Get list of invoices from db 
+ *     tags:
+ *       - Invoices
+ *     responses:
+ *         200:
+ *             description: Invoice list retrived successfully
+ *         400:
+ *             description: Failed
+ */
+transactionsRouter.get('/invoices', (req, res) => {
+    TransactionController.getInvoices(req, res);
+})
+
+
+/**
+ * @swagger
+ * /invoices/:id:
+ *  get:
+ *     summary: Get invoice based on id
+ *     description: Get a specific invoice based on its id
+ *     tags:
+ *       - Invoices
+ *     responses:
+ *         200:
+ *             description: Invoice retrived successfully
+ *         400:
+ *             description: Failed
+ */
+transactionsRouter.get('/invoices/:id', (req, res) => {
+    TransactionController.getInvoice(req, res);
+})
+
 export default transactionsRouter;
