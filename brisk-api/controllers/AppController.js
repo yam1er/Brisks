@@ -39,6 +39,36 @@ class AppController {
           console.log('Some error', err);
         });
     }
+
+    static async getWebhooks(req, res) {
+      const data = req.body;
+      console.log('webhooks...');
+      console.log(data);
+      if (data.type === 'InvoiceCreated') {
+        console.log(`Invoice ${data.invoiceId} has been created`);
+      }
+      if (data.type === 'InvoiceProcessing') {
+        console.log(`Invoice ${data.invoiceId} processing`);
+        const result = await dbClient.updateInvoice({ id: data.invoiceId }, { status: 'processing' });
+        console.log(result.matchedCount);
+      }
+      if (data.type === 'InvoiceInvalid') {
+        console.log(`Invoice ${data.invoiceId} is invalid`);
+        const result = await dbClient.updateInvoice({ id: data.invoiceId }, { status: 'invalid' });
+        console.log(result.matchedCount);
+      }
+      if (data.type === 'InvoiceSettled') {
+        console.log(`Invoice ${data.invoiceId} has been settled`)
+        const result = await dbClient.updateInvoice({ id: data.invoiceId }, { status: 'settled' });
+        console.log(result.matchedCount);
+      }
+      if (data.type === 'InvoiceExpired') {
+        console.log(`Invoice ${data.invoiceId} has expired`)
+        const result = await dbClient.updateInvoice({ id: data.invoiceId }, { status: 'expired' });
+        console.log(result.matchedCount);
+      }
+      res.sendStatus(200);
+    }
 }
 
 export default AppController;

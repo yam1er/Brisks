@@ -21,6 +21,7 @@ class TransactionController {
     static async getInvoice(req, res) {
         const invoiceId = req.params.id;
         const invoice = await dbClient.getInvoice({ _id: ObjectId(invoiceId) });
+        res.json(invoice);
     }
 
     static async postNew(req, res) {
@@ -49,7 +50,6 @@ class TransactionController {
         .then(response => response.json())
         .then(data => {
             const rate = data[0];
-            console.log(rate);
             res.json(rate);
         })
     }
@@ -95,9 +95,14 @@ class TransactionController {
         } catch (error) {
             console.error('Error fetching 2:', error);
         }
-        const invoice = await dbClient.addInvoice({ userId: req.session.userId, invoice: data });
-        console.log(invoice);
+        data.userId = req.session.userId;
+        // const invoice = await dbClient.addInvoice({ userId: req.session.userId, invoice: data });
+        const invoice = await dbClient.addInvoice(data);
         res.status(201).json(invoice);
+    }
+
+    static async updateInvoice(req, res) {
+        console.log('Yo');
     }
 }
 
