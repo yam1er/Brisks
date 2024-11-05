@@ -80,6 +80,10 @@ class DBClient {
         return update;
     }
 
+    async updateUser(conditionQuery, updateQuery) {
+        const update = await this.usersCollection.updateOne(conditionQuery, { $set: updateQuery });
+    }
+
     async getTransactions() {
         const transactions = await this.transactionsCollection.find({}).toArray();
         return transactions;
