@@ -62,4 +62,8 @@ router.get('/bitcoin', (req, res) => {
     AppController.bitcoinprice(req, res);
 })
 
+router.post('/webhooks', (req, res) => {
+    AppController.getWebhooks(req, res);
+})
+
 export default router;

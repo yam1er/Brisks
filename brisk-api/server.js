@@ -24,7 +24,7 @@ const corsOption = {
     origin: 'http://localhost:3000',
     optionsSuccesStatus: 200
 }
-app.use(cors());
+app.use(cors(corsOption));
 app.use(router);
 app.use(transactionsRouter);
 app.use(usersRouter);

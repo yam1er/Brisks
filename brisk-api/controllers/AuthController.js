@@ -30,7 +30,8 @@ class AuthController {
     }
 
     static getDisconnect(req, res) {
-        req.session.userId = '';
+        // req.session.userId = '';
+        req.session.destroy();
         res.sendStatus(204);
     }
 }
