@@ -81,7 +81,7 @@ class DBClient {
     }
 
     async updateUser(conditionQuery, updateQuery) {
-        const update = await this.usersCollection.updateOne(conditionQuery, { $inc: updateQuery });
+        const update = await this.usersCollection.updateOne(conditionQuery, { $set: updateQuery });
         return update;
     }
 
