@@ -12,6 +12,12 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const corsOption = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+    optionsSuccessStatus: 200
+}
+app.use(cors(corsOption));
 app.use(session({ 
     secret: '123456789',
     resave: true,
@@ -20,12 +26,6 @@ app.use(session({
         maxAge: 1000 * 60 * 60
     }
 }));
-const corsOption = {
-    origin: 'http://localhost:3000',
-    credentials: true,
-    optionsSuccesStatus: 200
-}
-app.use(cors(corsOption));
 app.use(router);
 app.use(transactionsRouter);
 app.use(usersRouter);
