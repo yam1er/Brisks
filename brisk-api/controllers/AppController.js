@@ -43,7 +43,7 @@ class AppController {
     static async getWebhooks(req, res) {
       const data = req.body;
       console.log('webhooks...');
-      console.log(data);
+      // console.log(data);
       if (data.type === 'InvoiceCreated') {
         console.log(`Invoice ${data.invoiceId} has been created`);
       }
@@ -60,7 +60,9 @@ class AppController {
       if (data.type === 'InvoiceSettled') {
         console.log(`Invoice ${data.invoiceId} has been settled`)
         const result = await dbClient.updateInvoice({ id: data.invoiceId }, { status: 'settled' });
+        // const update = await dbClient.updateUser({})
         console.log(result.matchedCount);
+        // console.log(req.session.userId);
       }
       if (data.type === 'InvoiceExpired') {
         console.log(`Invoice ${data.invoiceId} has expired`)
