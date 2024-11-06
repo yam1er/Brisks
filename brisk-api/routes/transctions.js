@@ -80,7 +80,7 @@ transactionsRouter.post('/transactions', auth.authenticateSession, (req, res) =>
  *         400:
  *             description: Invoice not created
  */
-transactionsRouter.post('/invoices', auth.authenticateSession, (req, res) => {
+transactionsRouter.post('/invoices', (req, res) => {
     TransactionController.createInvoice(req, res);
 })
 
