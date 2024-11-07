@@ -58,7 +58,7 @@ class AppController {
         console.log(result.matchedCount);
       }
       if (data.type === 'InvoiceSettled') {
-        await dbClient.updateInvoice({ id: data.invoiceId }, { status: 'settled' });
+        await dbClient.updateInvoice({ id: data.invoiceId }, { $set : { status: 'settled' } });
         console.log(`Invoice ${data.invoiceId} has been settled`);
         const invoice = await dbClient.getInvoice({ id: data.invoiceId });
         const update = await dbClient.updateUser({ _id: ObjectId(invoice.userId) }, { $inc : { balanceSat: Number(invoice.amount) } });
