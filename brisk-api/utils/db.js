@@ -23,6 +23,7 @@ class DBClient {
             console.log('Connexion failed. Error :', err);
         }
     }
+    
 
     isAlive() {
         return this.connexion;
@@ -76,12 +77,21 @@ class DBClient {
     }
 
     async updateInvoice(conditionQuery, updateQuery) {
-        const update = await this.invoicesCollection.updateOne(conditionQuery, { $set: updateQuery });
+        const update = await this.invoicesCollection.updateOne(conditionQuery, updateQuery);
         return update;
     }
 
     async updateUser(conditionQuery, updateQuery) {
-        const update = await this.usersCollection.updateOne(conditionQuery, { $set: updateQuery });
+        await this.db.collection('users').updateMany(
+            { },
+            [
+                { $set: { 
+                    balanceSat: { $toInt: "$balanceSat" }, 
+                    balanceFiat: { $toDouble: "$balanceFiat" } 
+                }}
+            ]
+        );
+        const update = await this.usersCollection.updateOne(conditionQuery, updateQuery);
         return update;
     }
 
