@@ -58,13 +58,11 @@ class TransactionController {
         const btcpayServerUrl = 'https://pay.withbitcoin.org';
         const storeId = '34oobADDerGCzRrS6r7myPMzqVrtKNF96igdAoJs4o6c';
         const apiKey = '8ba803c1005d54c8998e52f59398de07e69bce0a';
+        const apiEndpoint = `/api/v1/stores/${storeId}/invoices`;
         const email = req.session.userEmail;
         const currency = 'SATS';
         const { amount, title, description } = req.body;
         let data = "";
-
-        const apiEndpoint = `/api/v1/stores/${storeId}/payment-requests`;
-
         const headers = {
             'Content-Type': 'application/json',
             Authorization: 'token ' + apiKey
@@ -79,11 +77,8 @@ class TransactionController {
                 checkoutType: 'V2'
             }
         }
-
-        const apiEndpoint2 = `/api/v1/stores/${storeId}/invoices`;
-
         try {
-            const response = await fetch(btcpayServerUrl + apiEndpoint2, {
+            const response = await fetch(btcpayServerUrl + apiEndpoint, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(payload)
@@ -93,16 +88,43 @@ class TransactionController {
             }
             data = await response.json();
         } catch (error) {
-            console.error('Error fetching 2:', error);
+            console.error('Error fetching:', error);
         }
         data.userId = req.session.userId;
-        // const invoice = await dbClient.addInvoice({ userId: req.session.userId, invoice: data });
+        console.log(data.userId);
         const invoice = await dbClient.addInvoice(data);
         res.status(201).json(invoice);
     }
 
-    static async updateInvoice(req, res) {
-        console.log('Yo');
+    static async swap(req, res) {
+        const type = 'fiattosats';
+        const fiatAmount = 1;
+        const satAmount = 1333;
+
+        if (type === 'satstofiat') {
+            console.log(req.session.userId)
+            const update1 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceFiat: fiatAmount } });
+            const update2 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceSat: -satAmount } });
+            console.log(update1.matchedCount, update2.matchedCount);
+            if (update1.matchedCount && update2.matchedCount)
+            {
+                res.status(200).send({ message: 'Update Successful' });
+            } else {
+                res.status(400).send({ message: 'Update Failed' });
+            }
+        } else if ( type === 'fiattosats') {
+            const update1 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceFiat: -fiatAmount } });
+            const update2 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceSat: satAmount } });
+            console.log(update1.matchedCount, update2.matchedCount);
+            if (update1.matchedCount && update2.matchedCount)
+            {
+                    res.status(200).send({ message: 'Update Successful' });
+            } else {
+                res.status(400).send({ message: 'Update Failed' });
+            }
+        } else {
+            res.status(400).send({ message: 'Bad Operation'});
+        }
     }
 }
 

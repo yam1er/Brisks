@@ -139,4 +139,8 @@ transactionsRouter.get('/invoices/:id', (req, res) => {
     TransactionController.getInvoice(req, res);
 })
 
+transactionsRouter.post('/swap', (req, res) => {
+    TransactionController.swap(req, res);
+})
+
 export default transactionsRouter;
