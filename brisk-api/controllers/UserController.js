@@ -1,6 +1,8 @@
 import dbClient from "../utils/db";
+import userUtils from "../utils/user";
 const bcrypt = require('bcryptjs');
 import { ObjectId } from 'mongodb';
+import sha1 from 'sha1';
 
 
 class UserController {
@@ -27,19 +29,34 @@ class UserController {
         if (user) {
             return res.status(400).send('Already exist');
         }
-        const saltRounds = 10;
-        let hashed_password = 'yo';
-        bcrypt.hash(password, saltRounds, async (err, hashed) => {
-            if (err) {
-                console.log(err);
-            } else {
-                hashed_password = hashed;
-                const newUser = await dbClient.addUser(email, hashed);
-                res.status(201).json(newUser);
-            }
-        })
+        // const saltRounds = 10;
+        // let hashed_password = 'yo';
+        // bcrypt.hash(password, saltRounds, async (err, hashed) => {
+        //     if (err) {
+        //         console.log(err);
+        //     } else {
+        //         hashed_password = hashed;
+        //         const newUser = await dbClient.addUser(email, hashed);
+        //         res.status(201).json(newUser);
+        //     }
+        // })
+        const hashed_password = sha1(password);
+        const newUser = await dbClient.addUser(email, hashed_password);
+        return res.status(201).json(newUser);
+    }
+
+    static async getMe(req, res) {
+        const userDetails = await userUtils.getUserDetails(req);
+
+        const userObj = await dbClient.getUser({ _id: ObjectId(userDetails.userId) });
+
+        if (!userObj) { return res.status(401).send({ error: 'Unauthorized' }); }
+
+        const user = { id: userObj._id, ...userObj };
+        delete user._id;
+        delete user.password;
+        return res.status(200).send(user);
     }
 }
-
 
 export default UserController;

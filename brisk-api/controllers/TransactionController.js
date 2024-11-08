@@ -91,7 +91,6 @@ class TransactionController {
             console.error('Error fetching:', error);
         }
         data.userId = req.session.userId;
-        console.log(data.userId);
         const invoice = await dbClient.addInvoice(data);
         res.status(201).json(invoice);
     }
@@ -122,7 +121,7 @@ class TransactionController {
             if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Update Successful' }); }
             return res.status(400).send({ message: 'Update Failed' });
         }
-        return res.status(400).send({ message: 'Bad Operation'});
+        return res.status(400).send({ message: 'Bad Operation' });
     }
 }
 
