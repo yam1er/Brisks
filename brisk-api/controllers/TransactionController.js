@@ -91,40 +91,37 @@ class TransactionController {
             console.error('Error fetching:', error);
         }
         data.userId = req.session.userId;
-        console.log(data.userId);
         const invoice = await dbClient.addInvoice(data);
         res.status(201).json(invoice);
     }
 
     static async swap(req, res) {
-        const type = 'fiattosats';
-        const fiatAmount = 1;
-        const satAmount = 1333;
-
-        if (type === 'satstofiat') {
-            console.log(req.session.userId)
+        const { type, fiatAmount, satAmount } = req.body;
+        const userId = req.session.userId;
+        
+        const user = await dbClient.getUser({ _id: ObjectId(userId) });
+        if (!user) {
+            return res.status(401).send({ message: 'Unauthorized' });
+        }
+        if (!type || !fiatAmount || !satAmount) {
+            return res.status(400).send({ message: 'type, fiatAmount, satAmount not provided' });
+        }
+        if (type === 'sattofiat') {
+            if (satAmount > user.balanceSat) { return res.status(400).send({ message: 'Unsufiscient balance' }); }
             const update1 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceFiat: fiatAmount } });
             const update2 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceSat: -satAmount } });
             console.log(update1.matchedCount, update2.matchedCount);
-            if (update1.matchedCount && update2.matchedCount)
-            {
-                res.status(200).send({ message: 'Update Successful' });
-            } else {
-                res.status(400).send({ message: 'Update Failed' });
-            }
-        } else if ( type === 'fiattosats') {
+            if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Update Successful' }); }
+            return res.status(400).send({ message: 'Update Failed' });
+        } else if ( type === 'fiattosat') {
+            if (fiatAmount > user.balanceFiat) { return res.status(400).send({ message: 'Unsufiscient balance' }); }
             const update1 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceFiat: -fiatAmount } });
             const update2 = await dbClient.updateUser({ _id: ObjectId(req.session.userId) }, { $inc : { balanceSat: satAmount } });
             console.log(update1.matchedCount, update2.matchedCount);
-            if (update1.matchedCount && update2.matchedCount)
-            {
-                    res.status(200).send({ message: 'Update Successful' });
-            } else {
-                res.status(400).send({ message: 'Update Failed' });
-            }
-        } else {
-            res.status(400).send({ message: 'Bad Operation'});
+            if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Update Successful' }); }
+            return res.status(400).send({ message: 'Update Failed' });
         }
+        return res.status(400).send({ message: 'Bad Operation' });
     }
 }
 

@@ -38,7 +38,7 @@ usersRouter.post('/connect', (req, res) => {
  *          401:
  *              description: User not found
  */
-usersRouter.post('/disconnect', auth.authenticateSession, (req, res) => {
+usersRouter.post('/disconnect', (req, res) => {
     AuthController.getDisconnect(req, res);
 })
 
@@ -58,30 +58,35 @@ usersRouter.get('/users', (req, res) => {
     UserController.getUsers(req, res);
 })
 
-/**
- * @swagger
- * /users/:id:
- *  get:
- *     summary: get a user with id
- *     description: Get the details of a user with user id
- *     tags:
- *       - Users
- *     parameters:
- *          - name: id
- *            in: path
- *            required: true
- *            description: user id
- *            schema:
- *              type: string
- *     responses:
- *         200:
- *             description: The user of id id
- *         401:
- *             description: User not found
- */
-usersRouter.get('/users/:id', (req, res) => {
-    UserController.getUser(req, res);
+usersRouter.get('/users/me', (req, res) => {
+    UserController.getMe(req, res);
 })
+
+// /**
+//  * @swagger
+//  * /users/:id:
+//  *  get:
+//  *     summary: get a user with id
+//  *     description: Get the details of a user with user id
+//  *     tags:
+//  *       - Users
+//  *     parameters:
+//  *          - name: id
+//  *            in: path
+//  *            required: true
+//  *            description: user id
+//  *            schema:
+//  *              type: string
+//  *     responses:
+//  *         200:
+//  *             description: The user of id id
+//  *         401:
+//  *             description: User not found
+//  */
+// usersRouter.get('/users/:id', (req, res) => {
+//     UserController.getUser(req, res);
+// })
+
 
 /**
  * @swagger

@@ -8,7 +8,7 @@ class RedisClient {
         this.client.on('error', (error) => console.log('Error', error.message));
         this.client.on('connect', () => {
             this.client.ready = true
-            console.log('Successfully connected');
+            console.log('Successfully connected to Redis');
         })
     }
 
@@ -22,7 +22,7 @@ class RedisClient {
     }
 
     async set(key, value, duration) {
-        this.client.setex(key, duration,value);
+        this.client.setex(key, duration, value);
     }
 
     async del(key) {
