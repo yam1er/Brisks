@@ -17,7 +17,7 @@ function Login() {
                 {},
                 {
                     headers: {
-                        Authorization: `${btoa(`${email}:${password}`)}`,
+                        Authorization: `Bearer ${btoa(`${email}:${password}`)}`,
                     },
                     withCredentials: true
                 }
@@ -25,7 +25,7 @@ function Login() {
 
             if (response.status === 200) {
                 const { token } = response.data;
-                localStorage.setItem('authToken', token); // Stocke le jeton pour les futures requêtes
+                localStorage.setItem('authToken', token);// stock de token
                 console.log('Logged in successfully');
                 navigate('/dashboard');
             }
