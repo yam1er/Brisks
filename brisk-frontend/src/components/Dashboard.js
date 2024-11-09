@@ -18,6 +18,25 @@ function Dashboard() {
     const [balanceSatoshi, setBalanceSatoshi] = useState(0);
 
     useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get('http://brisk-api.alphonsemehounme.tech:3000/users/me', {
+                    headers: {
+                        "X-Token": `${localStorage.getItem('authToken')}`,
+                    },
+                });
+                const userData = response.data;
+                setBalanceUSD(userData.balanceFiat);
+                setBalanceSatoshi(userData.balanceSat);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations de l\'utilisateur', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    useEffect(() => {
         const fetchConversionRate = async () => {
             setLoadingRate(true);
             try {
@@ -134,6 +153,7 @@ function Dashboard() {
 			<h2 className="center">Create Invoice</h2>
 			<div className="center">
                         <label className="dlabel">
+
                             Amount (USD):
                             <input
                                 type="number"
