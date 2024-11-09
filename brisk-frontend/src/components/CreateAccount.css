@@ -1,0 +1,76 @@
+/* Conteneur principal pour centrer le formulaire d'inscription */
+.create-account-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f3f5;
+}
+
+/* Boîte de formulaire */
+.create-account-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Titre du formulaire */
+.create-account-box h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Champs de saisie */
+.create-account-box input[type="email"],
+.create-account-box input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.create-account-box input[type="email"]:focus,
+.create-account-box input[type="password"]:focus {
+    border-color: #4CAF50;
+}
+
+/* Bouton de création de compte */
+.create-account-box button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.create-account-box button:hover {
+    background-color: #45a049;
+}
+
+/* Message d'erreur */
+.error-message {
+    color: #d9534f;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* Message de succès */
+.success-message {
+    color: #4CAF50;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
