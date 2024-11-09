@@ -53,13 +53,8 @@ router.get('/about', (req, res) => {
  *         401:
  *             description: User not authorized
  */
-router.get('/stats', auth.authenticateSession, (req, res) => {
+router.get('/stats', (req, res) => {
     AppController.getStat(req, res);
-})
-
-// Bitcoin price
-router.get('/bitcoin', (req, res) => {
-    AppController.bitcoinprice(req, res);
 })
 
 router.post('/webhooks', (req, res) => {

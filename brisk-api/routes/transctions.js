@@ -19,7 +19,7 @@ const transactionsRouter = express.Router();
  *         401:
  *             description: Not authorized
  */
-transactionsRouter.get('/transactions', auth.authenticateSession, (req, res) => {
+transactionsRouter.get('/transactions', (req, res) => {
     TransactionController.getTransactions(req, res);
 })
 
@@ -44,7 +44,7 @@ transactionsRouter.get('/transactions', auth.authenticateSession, (req, res) => 
  *         401:
  *             description: Transaction not found
  */
-transactionsRouter.get('/transactions/:id', auth.authenticateSession, (req, res) => {
+transactionsRouter.get('/transactions/:id', (req, res) => {
     TransactionController.getTransaction(req, res);
 })
 
@@ -62,7 +62,7 @@ transactionsRouter.get('/transactions/:id', auth.authenticateSession, (req, res)
  *         400:
  *             description: Transaction
  */
-transactionsRouter.post('/transactions', auth.authenticateSession, (req, res) => {
+transactionsRouter.post('/transactions', (req, res) => {
     TransactionController.postNew(req, res);
 })
 
@@ -139,6 +139,22 @@ transactionsRouter.get('/invoices/:id', (req, res) => {
     TransactionController.getInvoice(req, res);
 })
 
+/**
+ * @swagger
+ * /swap:
+ *  post:
+ *     summary: Swap BTC to fiat or fiat to BTC
+ *     description: Swap BTC to fiat or fiat to BTC
+ *     tags:
+ *       - Transactions
+ *     responses:
+ *         200:
+ *             description: Swap successful
+ *         400:
+ *             description: Bad Operation
+ *         401:
+ *             description: Unauthorized
+ */
 transactionsRouter.post('/swap', (req, res) => {
     TransactionController.swap(req, res);
 })
