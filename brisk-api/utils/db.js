@@ -66,8 +66,8 @@ class DBClient {
         return invoice.ops[0];
     }
 
-    async getInvoices() {
-        const invoices = await this.invoicesCollection.find({}).toArray();
+    async getInvoices(query) {
+        const invoices = await this.invoicesCollection.find(query).toArray();
         return invoices;
     }
 
