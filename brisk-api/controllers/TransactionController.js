@@ -15,14 +15,28 @@ class TransactionController {
     }
 
     static async getInvoices(req, res) {
-        const invoices = await dbClient.getInvoices();
+        const userDetails = await userUtils.getUserDetails(req);
+        const user = await dbClient.getUser({ _id: ObjectId(userDetails.userId) });
+        if (!user) { return res.status(401).send({ error: 'Unauthorized' }); }
+        let query = {};
+
+        if (user.email !== 'superadmin@brisk.xyz') {
+            query = { userId: user._id };
+        }
+
+        const invoices = await dbClient.getInvoices(query);
         res.json(invoices);
     }
 
     static async getInvoice(req, res) {
+        const userDetails = await userUtils.getUserDetails(req);
+        const user = await dbClient.getUser({ _id: ObjectId(userDetails.userId) });
+
+        if (!user) { return res.status(401).send({ error: 'Unauthorized' }); }
+
         const invoiceId = req.params.id;
         const invoice = await dbClient.getInvoice({ _id: ObjectId(invoiceId) });
-        res.json(invoice);
+        return res.status(200).send(invoice);
     }
 
     static async postNew(req, res) {
@@ -51,7 +65,7 @@ class TransactionController {
         .then(response => response.json())
         .then(data => {
             const rate = data[0];
-            res.json(rate);
+            res.status(200).send(rate);
         })
     }
 
@@ -97,7 +111,7 @@ class TransactionController {
         }
         data.userId = user._id;
         const invoice = await dbClient.addInvoice(data);
-        res.status(201).json(invoice);
+        return res.status(201).json(invoice);
     }
 
     static async swap(req, res) {
