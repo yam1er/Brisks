@@ -11,15 +11,15 @@ const SECRET_KEY = '123456789';
 
 class AuthController {
 
-    constructor() {
-        this.authenticateSession = (req, res, next) => {
-            if (req.session.userId) {
-                next();
-            } else {
-                res.sendStatus(401);
-            }
-        }
-    }
+    // constructor() {
+    //     this.authenticateSession = (req, res, next) => {
+    //         if (req.session.userId) {
+    //             next();
+    //         } else {
+    //             res.sendStatus(401);
+    //         }
+    //     }
+    // }
 
     // static async getConnect(req, res) {
     //     const { email, password } = req.body;
@@ -57,12 +57,6 @@ class AuthController {
         console.log('Login successful');
         res.status(200).json({ token });
     }
-
-    // static getDisconnect(req, res) {
-    //     // req.session.userId = '';
-    //     req.session.destroy();
-    //     res.sendStatus(204);
-    // }
 
     static async getDisconnect(req, res) {
         const userDetails = await userUtils.getUserDetails(req);
