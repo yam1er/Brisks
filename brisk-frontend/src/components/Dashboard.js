@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+
 import axios from 'axios';
 import './Dashboard.css';
 //import { FaHistory, FaCog } from 'react-icons/fa'; // Import des icônes depuis react-icons
@@ -199,8 +201,8 @@ function Dashboard() {
 
                 {error && <p className="error-message">{error}</p>}
 
-		<div className="transaction-history">
-                <h3>Transaction History</h3>
+		<div className="transaction-history create">
+                <h2 className="center">Transaction History</h2>
                 {transactions.length > 0 ? (
                     <table className="transaction-table">
                         <thead>
