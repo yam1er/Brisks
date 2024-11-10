@@ -16,6 +16,7 @@ function Dashboard() {
     const [loadingLink, setLoadingLink] = useState(false);
     const [balanceUSD, setBalanceUSD] = useState(0);  
     const [balanceSatoshi, setBalanceSatoshi] = useState(0);
+    const [transactions, setTransactions] = useState([]);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -52,6 +53,23 @@ function Dashboard() {
             }
         };
         fetchConversionRate();
+    }, []);
+
+     useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await axios.get('http://brisk-api.alphonsemehounme.tech:3000/invoices', {
+                    headers: {
+                        "X-Token": `${localStorage.getItem('authToken')}`,
+                    },
+                });
+                setTransactions(response.data);
+            } catch (error) {
+                console.error("Error in transactions récupération", error);
+            }
+        };
+
+        fetchTransactions();
     }, []);
 
     const handleXofChange = (e) => {
@@ -182,6 +200,40 @@ function Dashboard() {
                 )}
 
                 {error && <p className="error-message">{error}</p>}
+
+		<div className="transaction-history">
+                <h3>Transaction History</h3>
+                {transactions.length > 0 ? (
+                    <table className="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Amount</th>
+                                <th>Creation Date</th>
+                                <th>Status</th>
+                                <th>Paiement link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {transactions.map((transaction) => (
+                                <tr key={transaction.invoice.id}>
+                                    <td>{transaction.invoice.id}</td>
+                                    <td>{transaction.invoice.amount} SATS</td>
+                                    <td>{new Date(transaction.invoice.createdTime * 1000).toLocaleDateString()}</td>
+                                    <td>{transaction.invoice.status}</td>
+                                    <td>
+                                        <a href={transaction.invoice.checkoutLink} target="_blank" rel="noopener noreferrer">
+                                            See the link
+                                        </a>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p>Transaction not found</p>
+                )}
+            </div>
 
                 {showPopup && (
                     <div className="popup">
