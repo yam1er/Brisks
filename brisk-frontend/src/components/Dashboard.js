@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
-
 import axios from 'axios';
 import './Dashboard.css';
 //import { FaHistory, FaCog } from 'react-icons/fa'; // Import des icônes depuis react-icons
@@ -215,20 +213,30 @@ function Dashboard() {
                             </tr>
                         </thead>
                         <tbody>
-                            {transactions.map((transaction) => (
-                                <tr key={transaction.invoice.id}>
-                                    <td>{transaction.invoice.id}</td>
-                                    <td>{transaction.invoice.amount} SATS</td>
-                                    <td>{new Date(transaction.invoice.createdTime * 1000).toLocaleDateString()}</td>
-                                    <td>{transaction.invoice.status}</td>
-                                    <td>
-                                        <a href={transaction.invoice.checkoutLink} target="_blank" rel="noopener noreferrer">
-                                            See the link
+                    {transactions.length > 0 ? (
+                        transactions.map((transaction) => (
+                            <tr key={transaction._id}>
+                                <td>{transaction.id || 'N/A'}</td>
+                                <td>{transaction.amount || '0'} SATS</td>
+                                <td>{transaction.createdTime ? new Date(transaction.createdTime * 1000).toLocaleString() : 'N/A'}</td>
+                                <td>{transaction.status || 'N/A'}</td>
+                                <td>
+                                    {transaction.checkoutLink ? (
+                                        <a href={transaction.checkoutLink} target="_blank" rel="noopener noreferrer">
+                                            View Link
                                         </a>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
+                                    ) : (
+                                        'Link not available'
+                                    )}
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5">No transactions found</td>
+                        </tr>
+                    )}
+                </tbody>
                     </table>
                 ) : (
                     <p>Transaction not found</p>
