@@ -29,17 +29,7 @@ class UserController {
         if (user) {
             return res.status(400).send('Already exist');
         }
-        // const saltRounds = 10;
-        // let hashed_password = 'yo';
-        // bcrypt.hash(password, saltRounds, async (err, hashed) => {
-        //     if (err) {
-        //         console.log(err);
-        //     } else {
-        //         hashed_password = hashed;
-        //         const newUser = await dbClient.addUser(email, hashed);
-        //         res.status(201).json(newUser);
-        //     }
-        // })
+        
         const hashed_password = sha1(password);
         const newUser = await dbClient.addUser(email, hashed_password);
         return res.status(201).json(newUser);
