@@ -1,45 +1,44 @@
 import React, { useState, useEffect } from 'react';
-
-
 import axios from 'axios';
 import './Dashboard.css';
-//import { FaHistory, FaCog } from 'react-icons/fa'; // Import des icônes depuis react-icons
 
 function Dashboard() {
-    const [xof, setXof] = useState('');
-    const [satoshi, setSatoshi] = useState('');
+    const [invoiceSatoshi, setInvoiceSatoshi] = useState('');
+    const [invoiceUSD, setInvoiceUSD] = useState('');
     const [conversionRate, setConversionRate] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [paymentLink, setPaymentLink] = useState('');
-    const [error, setError] = useState('');
-    const [loadingRate, setLoadingRate] = useState(false);
     const [loadingLink, setLoadingLink] = useState(false);
-    const [balanceUSD, setBalanceUSD] = useState(0);  
+    const [error, setError] = useState('');
+
+    const [balanceUSD, setBalanceUSD] = useState(0);
     const [balanceSatoshi, setBalanceSatoshi] = useState(0);
+
+    const [swapSatoshi, setSwapSatoshi] = useState('');
+    const [swapUSD, setSwapUSD] = useState('');
+    const [swapType, setSwapType] = useState('sats_to_usd');
+
     const [transactions, setTransactions] = useState([]);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await axios.get('http://brisk-api.alphonsemehounme.tech:3000/users/me', {
-                    headers: {
-                        "X-Token": `${localStorage.getItem('authToken')}`,
-                    },
-                });
-                const userData = response.data;
-                setBalanceUSD(userData.balanceFiat);
-                setBalanceSatoshi(userData.balanceSat);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des informations de l\'utilisateur', error);
-            }
-        };
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('http://brisk-api.alphonsemehounme.tech:3000/users/me', {
+                headers: { "X-Token": `${localStorage.getItem('authToken')}` },
+            });
+            const userData = response.data;
+            setBalanceUSD(userData.balanceFiat);
+            setBalanceSatoshi(userData.balanceSat);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des informations de l'utilisateur", error);
+        }
+    };
 
+    useEffect(() => {
         fetchUserData();
     }, []);
 
     useEffect(() => {
         const fetchConversionRate = async () => {
-            setLoadingRate(true);
             try {
                 const response = await axios.get('http://brisk-api.alphonsemehounme.tech:3000/rates');
                 const btcToXofRate = response.data.rate;
@@ -48,14 +47,12 @@ function Dashboard() {
             } catch (error) {
                 setError('Error retrieving conversion rate');
                 console.error('Error retrieving conversion rate', error);
-            } finally {
-                setLoadingRate(false);
             }
         };
         fetchConversionRate();
     }, []);
 
-     useEffect(() => {
+    useEffect(() => {
         const fetchTransactions = async () => {
             try {
                 const response = await axios.get('http://brisk-api.alphonsemehounme.tech:3000/invoices', {
@@ -72,30 +69,20 @@ function Dashboard() {
         fetchTransactions();
     }, []);
 
-    const handleXofChange = (e) => {
-        setError('');
-	if (e.target.value >= 0)
-	{
-        	const xofValue = e.target.value;
-        	setXof(xofValue);
-        	if (conversionRate) {
-            	setSatoshi((xofValue / conversionRate).toFixed(8));
-        	}
-	}else
-		setXof(0);
+    const handleInvoiceUSDChange = (e) => {
+        const usdValue = e.target.value;
+        setInvoiceUSD(usdValue);
+        if (conversionRate) {
+            setInvoiceSatoshi((usdValue / conversionRate).toFixed(8));
+        }
     };
 
-    const handleSatoshiChange = (e) => {
-        setError('');
-	if (e.target.value >= 0)
-	{
-        	const satoshiValue = e.target.value;
-        	setSatoshi(satoshiValue);
-        	if (conversionRate) {
-            	setXof((satoshiValue * conversionRate).toFixed(2));
-        	}
-	}else
-		setSatoshi(0);
+    const handleInvoiceSatoshiChange = (e) => {
+        const satValue = e.target.value;
+        setInvoiceSatoshi(satValue);
+        if (conversionRate) {
+            setInvoiceUSD((satValue * conversionRate).toFixed(2));
+        }
     };
 
     const generatePaymentLink = async () => {
@@ -105,14 +92,12 @@ function Dashboard() {
             const response = await axios.post(
                 'http://brisk-api.alphonsemehounme.tech:3000/invoices',
                 {
-                    amount: satoshi,
+                    amount: invoiceSatoshi,
                     title: 'Payment',
                     description: 'Invoice payment'
                 },
                 {
-                    headers: {
-                        "X-Token": `${localStorage.getItem('authToken')}`,
-                    },
+                    headers: { "X-Token": `${localStorage.getItem('authToken')}` },
                     withCredentials: true
                 }
             );
@@ -132,125 +117,177 @@ function Dashboard() {
         }
     };
 
+    const handleSwapUSDChange = (e) => {
+        const usdValue = e.target.value;
+        setSwapUSD(usdValue);
+        if (conversionRate) {
+            setSwapSatoshi((usdValue / conversionRate).toFixed(8));
+            setSwapType('fiattosat');
+        }
+    };
+
+    const handleSwapSatoshiChange = (e) => {
+        const satValue = e.target.value;
+        setSwapSatoshi(satValue);
+        if (conversionRate) {
+            setSwapUSD((satValue * conversionRate).toFixed(2));
+            setSwapType('sattofiat');
+        }
+    };
+
+    const handleSwap = async () => {
+        try {
+            const response = await axios.post(
+                'http://brisk-api.alphonsemehounme.tech:3000/swap',
+                {
+                    fiatAmount: swapUSD,
+                    satAmount: swapSatoshi,
+                    type: swapType,
+                },
+                {
+                    headers: { 'X-Token': `${localStorage.getItem('authToken')}` },
+                    withCredentials: true,
+                }
+            );
+
+            await fetchUserData();
+            setError('');
+        } catch (error) {
+            setError('Error processing swap');
+            console.error('Error processing swap', error);
+        }
+    };
+
     return (
         <div className="dashboard-container">
             <aside className="sidebar">
                 <div className="profile-section">
                     <img src="profile.jpg" alt="Profile" className="profile-pic" />
-                    <h3>Nom du Compte</h3>
+                    <h2>Company</h2>
                 </div>
                 <nav className="menu">
                     <div className="menu-item">
-                        <span>Historique</span>
+                        <span>Transactions</span>
                     </div>
                     <div className="menu-item">
-                        <span>Paramètres</span>
+                        <span>settings</span>
                     </div>
                 </nav>
             </aside>
-            
+
             <main className="main-content">
-                <h2 className="dasboard">Dashboard</h2>
-                {loadingRate ? (
-                    <p>Loading conversion rate...</p>
-                ) : (
-                    <>
-			<div className="balance-container">
-			    <div className="balance-block">
-			        <h3>Balance in dollar</h3>
-			        <p>{balanceUSD || '0.00'} USD</p>
-			    </div>
-			    <div className="balance-block">
-			        <h3>Balance in Satoshi</h3>
-			        <p>{balanceSatoshi || '0'} Sats</p>
-			    </div>
-			</div>
+                <h2 className="dashboard">Dashboard</h2>
 
+                {/* Section des balances */}
+                <div className="balance-container">
+                    <div className="balance-block">
+                        <h3>Balance in USD</h3>
+                        <p>{balanceUSD || '0.00'} USD</p>
+                    </div>
+                    <div className="balance-block">
+                        <h3>Balance in Satoshi</h3>
+                        <p>{balanceSatoshi || '0'} Sats</p>
+                    </div>
+                </div>
 
-			<div className="create">
-			<h2 className="center">Create Invoice</h2>
-			<div className="center">
-                        <label className="dlabel">
-
+                {/* Section de génération de facture */}
+                <div className="create invoice">
+                    <h2 className="center">Create Invoice</h2>
+                    <div className="center">
+                        <label>
                             Amount (USD):
                             <input
                                 type="number"
-                                value={xof}
-                                onChange={handleXofChange}
+                                value={invoiceUSD}
+                                onChange={handleInvoiceUSDChange}
                                 placeholder="Enter amount in USD"
                             />
                         </label>
-                        <label className="dlabel">
+                        <label>
                             Amount (Satoshi):
                             <input
                                 type="number"
-                                value={satoshi}
-                                onChange={handleSatoshiChange}
+                                value={invoiceSatoshi}
+                                onChange={handleInvoiceSatoshiChange}
                                 placeholder="Enter amount in Satoshi"
                             />
                         </label>
-			</div>
-			<div className="center bdiv">
-                        <button className="button" onClick={generatePaymentLink} disabled={loadingLink}>		
-                            {loadingLink ? 'Generating link...' : 'Generate payment link'}
-                        </button>
-			</div>
-			</div>
-                    </>
-                )}
+                    </div>
+                    <button className="button" onClick={generatePaymentLink} disabled={loadingLink}>
+                        {loadingLink ? 'Generating link...' : 'Generate payment link'}
+                    </button>
+                </div>
 
-                {error && <p className="error-message">{error}</p>}
+                {/* Section de swap */}
+                <div className="conversion-form swap">
+                    <h2>Swap</h2>
+                    <label>Amount (USD):</label>
+                    <input
+                        type="number"
+                        value={swapUSD}
+                        onChange={handleSwapUSDChange}
+                        placeholder="amount in USD"
+                    />
+                    <label>Amount (Satoshi):</label>
+                    <input
+                        type="number"
+                        value={swapSatoshi}
+                        onChange={handleSwapSatoshiChange}
+                        placeholder="amount in Satoshi"
+                    />
+		    <label>Conversion type:</label>
+                    <select value={swapType} onChange={(e) => setSwapType(e.target.value)}>
+                        <option value="sattofiat">Sats to USD</option>
+                        <option value="fiattosat">USD to Sats</option>
+                    </select>
+                    <button className="button" onClick={handleSwap}>Convert</button>
+                </div>
 
-		<div className="transaction-history create">
-                <h2 className="center">Transaction History</h2>
-                {transactions.length > 0 ? (
-                    <table className="transaction-table">
-                        <thead>
-                            <tr>
-                                <th>Transaction ID</th>
-                                <th>Amount</th>
-                                <th>Creation Date</th>
-                                <th>Status</th>
-                                <th>Paiement link</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                {/* Section historique des transactions */}
+                <div className="transaction-history">
+                    <h2 className="center">Transaction History</h2>
                     {transactions.length > 0 ? (
-                        transactions.map((transaction) => (
-                            <tr key={transaction._id}>
-                                <td>{transaction.id || 'N/A'}</td>
-                                <td>{transaction.amount || '0'} SATS</td>
-                                <td>{transaction.createdTime ? new Date(transaction.createdTime * 1000).toLocaleString() : 'N/A'}</td>
-                                <td>{transaction.status || 'N/A'}</td>
-                                <td>
-                                    {transaction.checkoutLink ? (
-                                        <a href={transaction.checkoutLink} target="_blank" rel="noopener noreferrer">
-                                            View Link
-                                        </a>
-                                    ) : (
-                                        'Link not available'
-                                    )}
-                                </td>
-                            </tr>
-                        ))
+                        <table className="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Amount</th>
+                                    <th>Creation Date</th>
+                                    <th>Status</th>
+                                    <th>Paiement link</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {transactions.map((transaction) => (
+                                    <tr key={transaction._id}>
+                                        <td>{transaction.id || 'N/A'}</td>
+                                        <td>{transaction.amount || '0'} SATS</td>
+                                        <td>{transaction.createdTime ? new Date(transaction.createdTime * 1000).toLocaleString() : 'N/A'}</td>
+                                        <td>{transaction.status || 'N/A'}</td>
+                                        <td>
+                                            {transaction.checkoutLink ? (
+                                                <a href={transaction.checkoutLink} target="_blank" rel="noopener noreferrer">
+                                                    View Link
+                                                </a>
+                                            ) : (
+                                                'Link not available'
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     ) : (
-                        <tr>
-                            <td colSpan="5">No transactions found</td>
-                        </tr>
+                        <p>Transaction not found</p>
                     )}
-                </tbody>
-                    </table>
-                ) : (
-                    <p>Transaction not found</p>
-                )}
-            </div>
+                </div>
 
                 {showPopup && (
                     <div className="popup">
                         <div className="popup-content">
                             <h3>Payment link generated</h3>
-                            <p>Amount (USD): {xof}</p>
-                            <p>Amount (Satoshi): {satoshi}</p>
+                            <p>Amount (USD): {invoiceUSD}</p>
+                            <p>Amount (Satoshi): {invoiceSatoshi}</p>
                             <p>
                                 Payment Link: <a href={paymentLink} target="_blank" rel="noopener noreferrer">{paymentLink}</a>
                             </p>
