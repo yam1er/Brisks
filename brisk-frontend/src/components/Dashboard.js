@@ -201,8 +201,8 @@ function Dashboard() {
 
                 {error && <p className="error-message">{error}</p>}
 
-		<div className="transaction-history">
-                <h3>Transaction History</h3>
+		<div className="transaction-history create">
+                <h2 className="center">Transaction History</h2>
                 {transactions.length > 0 ? (
                     <table className="transaction-table">
                         <thead>
@@ -215,20 +215,30 @@ function Dashboard() {
                             </tr>
                         </thead>
                         <tbody>
-                            {transactions.map((transaction) => (
-                                <tr key={transaction.invoice.id}>
-                                    <td>{transaction.invoice.id}</td>
-                                    <td>{transaction.invoice.amount} SATS</td>
-                                    <td>{new Date(transaction.invoice.createdTime * 1000).toLocaleDateString()}</td>
-                                    <td>{transaction.invoice.status}</td>
-                                    <td>
-                                        <a href={transaction.invoice.checkoutLink} target="_blank" rel="noopener noreferrer">
-                                            See the link
+                    {transactions.length > 0 ? (
+                        transactions.map((transaction) => (
+                            <tr key={transaction._id}>
+                                <td>{transaction.id || 'N/A'}</td>
+                                <td>{transaction.amount || '0'} SATS</td>
+                                <td>{transaction.createdTime ? new Date(transaction.createdTime * 1000).toLocaleString() : 'N/A'}</td>
+                                <td>{transaction.status || 'N/A'}</td>
+                                <td>
+                                    {transaction.checkoutLink ? (
+                                        <a href={transaction.checkoutLink} target="_blank" rel="noopener noreferrer">
+                                            View Link
                                         </a>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
+                                    ) : (
+                                        'Link not available'
+                                    )}
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5">No transactions found</td>
+                        </tr>
+                    )}
+                </tbody>
                     </table>
                 ) : (
                     <p>Transaction not found</p>
