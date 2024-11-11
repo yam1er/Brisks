@@ -9,9 +9,9 @@
 
 ## Setup instructions
 
-- API : [Setup instructions](./brisk-api/readme.md)
+- API : [Setup instructions](https://github.com/yam1er/Brisks/blob/main/brisk-api/README.md)
 
-- Client : [Setup instructions](./brisk-frontend/readme.md)
+- Client : [Setup instructions](https://github.com/yam1er/Brisks/blob/main/brisk-frontend/README.md)
 
 ## Usage guidelines
 
@@ -35,4 +35,6 @@ This project is created by two engineers and is open for future contributions fr
 - [Yam](https://github.com/yam1er/)
 - [Alphonse](https://github.com/AlphonseMehounme/)
 
-We week working to make the app better.
+## Contributions
+
+We week working to make the app better. Would you like to join ? Make a copy of the repo and let's do it.
