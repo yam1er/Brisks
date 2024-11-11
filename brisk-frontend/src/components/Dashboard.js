@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import './Dashboard.css';
+import BriskImage from '../Brisk.png';
+import { useNavigate } from 'react-router-dom';
+
 
 function Dashboard() {
+    const navigate = useNavigate();
     const [invoiceSatoshi, setInvoiceSatoshi] = useState('');
     const [invoiceUSD, setInvoiceUSD] = useState('');
     const [conversionRate, setConversionRate] = useState(null);
@@ -19,6 +24,24 @@ function Dashboard() {
     const [swapType, setSwapType] = useState('sats_to_usd');
 
     const [transactions, setTransactions] = useState([]);
+
+    // Logout function
+    const handleLogout = async () => {
+        try {
+           // await axios.post('http://brisk-api.alphonsemehounme.tech:3000/logout', {}, {
+               // headers: {
+                 //   "X-Token": `${localStorage.getItem('authToken')}`,
+              //  },
+               // withCredentials: true
+          //  });
+
+           // localStorage.removeItem('authToken');
+
+            // Redirect to login page
+            navigate('/login');
+        } catch (error) {
+            console.error('Error logging out', error);
+        }}
 
     const fetchUserData = async () => {
         try {
@@ -73,7 +96,7 @@ function Dashboard() {
         const usdValue = e.target.value;
         setInvoiceUSD(usdValue);
         if (conversionRate) {
-            setInvoiceSatoshi((usdValue / conversionRate).toFixed(8));
+            setInvoiceSatoshi(Math.ceil((usdValue / conversionRate).toFixed(2)));
         }
     };
 
@@ -121,7 +144,7 @@ function Dashboard() {
         const usdValue = e.target.value;
         setSwapUSD(usdValue);
         if (conversionRate) {
-            setSwapSatoshi((usdValue / conversionRate).toFixed(8));
+            setSwapSatoshi(Math.ceil((usdValue / conversionRate).toFixed(2)));
             setSwapType('fiattosat');
         }
     };
@@ -162,8 +185,8 @@ function Dashboard() {
         <div className="dashboard-container">
             <aside className="sidebar">
                 <div className="profile-section">
-                    <img src="profile.jpg" alt="Profile" className="profile-pic" />
-                    <h2>Company</h2>
+                    <img src={BriskImage} alt="Profile" className="profile-pic" />
+                    <h2>Brisk Company</h2>
                 </div>
                 <nav className="menu">
                     <div className="menu-item">
@@ -173,6 +196,11 @@ function Dashboard() {
                         <span>settings</span>
                     </div>
                 </nav>
+		<div className="logout-container">
+                    <button className="logout-button" onClick={handleLogout}>
+                        Logout
+                    </button>
+                </div>
             </aside>
 
             <main className="main-content">
@@ -180,13 +208,13 @@ function Dashboard() {
 
                 {/* Section des balances */}
                 <div className="balance-container">
-                    <div className="balance-block">
-                        <h3>Balance in USD</h3>
-                        <p>{balanceUSD || '0.00'} USD</p>
-                    </div>
-                    <div className="balance-block">
+		    <div className="balance-block">
                         <h3>Balance in Satoshi</h3>
                         <p>{balanceSatoshi || '0'} Sats</p>
+                    </div>
+                    <div className="balance-block">
+                        <h3>Balance in USD</h3>
+                        <p>{balanceUSD.toFixed(2) || '0.00'} USD</p>
                     </div>
                 </div>
 
