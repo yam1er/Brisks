@@ -1,4 +1,6 @@
-<p align="center">BRISK-API</p>
+<h1 align="center">BRISK-API</h1>
+
+<p align="center">Welcome to Brisk API</p>
 
 ![image](https://github.com/user-attachments/assets/f1a75fdf-c30d-4675-b9a4-b46ce38e210b)
 
