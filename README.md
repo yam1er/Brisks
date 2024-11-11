@@ -1,11 +1,11 @@
-<h1 style="text-align: center;">BRISK</h1>
+<h1 align="center">BRISK</h1>
 
-<h2 style="text-align: center;">Welcome on Brisk</h2>
+<h2 align="center">Welcome on Brisk</h2>
 
 ![image](https://github.com/user-attachments/assets/1a034cc3-fe75-4098-af3a-0cd8aaafb63f)
 
 
-<p style="text-align: center;">The Best way to integrate Bitcoin Payment to your company</p>
+<p align="center">The Best way to integrate Bitcoin Payment to your company</p>
 
 ## Setup instructions
 
@@ -27,3 +27,12 @@ Test the app here and share feedbacks for improvments : [http://brisk.alphonseme
 
 - The API is hosted on Linode server and served via nginx and accessible via a domain name.
 - The client is hosted on Linode server and served via nginx and connected to domain name with DNS.
+
+## Authors
+
+This project is created by two engineers and is open for future contributions from the community.
+
+- [Yam](https://github.com/yam1er/)
+- [Alphonse](https://github.com/AlphonseMehounme/)
+
+We week working to make the app better.
