@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const corsOption = {
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'http://173.230.128.72'],
     credentials: true,
     optionsSuccessStatus: 200
 }
