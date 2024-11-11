@@ -1,5 +1,8 @@
 <h1 align="center">Brisk App</h1>
 
+![image](https://github.com/user-attachments/assets/1d227b95-4370-49e6-a759-a840218306eb)
+
+
 <p align="center">Welcome to the Brisk App</p>
 
 <p align="center">The simplest way to integrate Bitcoin payment to your company</p>
