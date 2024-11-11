@@ -16,12 +16,8 @@ class AppController {
         });
     }
 
-    static hello(req, res) {
-        res.send('Hello Word');
-    }
-
     static about(req, res) {
-        return res.json({ About: 'This is being built by AL and Yam for better access to bitcoin'});
+        return res.json({ About: 'This is being built by AL and Yam for better bitcoin integration for companies. Link : https://github.com/yam1er/Brisks/tree/main/brisk-api'});
     }
 
     static async getWebhooks(req, res) {

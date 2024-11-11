@@ -58,6 +58,20 @@ usersRouter.get('/users', (req, res) => {
     UserController.getUsers(req, res);
 })
 
+/**
+ * @swagger
+ * /users/me:
+ *  get:
+ *     summary: Get the connected user
+ *     description: Get the connected user
+ *     tags:
+ *       - Users
+ *     responses:
+ *         200:
+ *             description: User retrieved successfully;
+ *         401:
+ *             description: Authorized
+ */
 usersRouter.get('/users/me', (req, res) => {
     UserController.getMe(req, res);
 })

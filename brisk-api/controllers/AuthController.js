@@ -1,37 +1,10 @@
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 import userUtils from '../utils/user';
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const session = require('express-session');
 import sha1 from 'sha1';
 import { v4 as uuidv4} from 'uuid';
 
-const SECRET_KEY = '123456789';
-
 class AuthController {
-
-    // constructor() {
-    //     this.authenticateSession = (req, res, next) => {
-    //         if (req.session.userId) {
-    //             next();
-    //         } else {
-    //             res.sendStatus(401);
-    //         }
-    //     }
-    // }
-
-    // static async getConnect(req, res) {
-    //     const { email, password } = req.body;
-    //     const user = await dbClient.getUser({ email });
-    //     if (user && bcrypt.compareSync(password, user.password)) {
-    //         req.session.userId = user._id;
-    //         req.session.userEmail = user.email;
-    //         res.status(200).json({ message: 'Logging Successful'});
-    //     } else {
-    //         res.status(401).send('Unauthorized');
-    //     }
-    // }
 
     static async getConnect(req, res) {
         const Authorization = req.header('Authorization') || '';

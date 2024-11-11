@@ -8,4 +8,10 @@ Find it live at : http://brisk-api.alphonsemehounme.tech:3000/
 
 Docs : http://brisk-api.alphonsemehounme.tech:3000/api-docs/#/
 
+## Setup instructions
+
+## Usage guidelines
+
+## Project architecture.
+
 More to be added...
