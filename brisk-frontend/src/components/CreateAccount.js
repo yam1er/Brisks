@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+
 import axios from 'axios';
 import './CreateAccount.css';
 
@@ -15,7 +17,7 @@ function CreateAccount() {
             if (response.status === 201) {
                 setSuccess('Account created successfully! Redirecting to login...');
                 setTimeout(() => {
-                    window.location.href = '/login'; // Redirection vers la page de connexion
+                    window.location.href = '/login';
                 }, 2000);
             }
         } catch (err) {
@@ -50,6 +52,7 @@ function CreateAccount() {
 
                     <button type="submit">Create Account</button>
                 </form>
+	
                 {error && <p className="error-message">{error}</p>}
                 {success && <p className="success-message">{success}</p>}
             </div>
