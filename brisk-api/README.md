@@ -1,5 +1,7 @@
 <p align="center">BRISK-API</p>
 
+![image](https://github.com/user-attachments/assets/f1a75fdf-c30d-4675-b9a4-b46ce38e210b)
+
 <p align="center">This is the api serving the backend the brisk project</p>
 
 ## Info
