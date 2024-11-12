@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import userUtils from "../utils/user";
 
 class TransactionController {
+
     static async getTransactions(req, res) {
         const transactions = await dbClient.getTransactions();
         res.json(transactions);
@@ -130,12 +131,14 @@ class TransactionController {
             const update1 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceFiat: +fiatAmount } });
             const update2 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceSat: -satAmount } });
             if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Update Successful' }); }
+            await dbClient.addInvoice({ id: 234, amount: 12, createdTime: 12345567, status: 'done', checkoutLink: 'google.com' });
             return res.status(400).send({ message: 'Update Failed' });
         } else if ( type === 'fiattosat') {
             if (fiatAmount > user.balanceFiat) { return res.status(400).send({ message: 'Unsufiscient Fiat balance' }); }
             const update1 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceFiat: -fiatAmount } });
             const update2 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceSat: +satAmount } });
             if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Update Successful' }); }
+            await dbClient.addInvoice({ id: 234, amount: 12, createdTime: 12345567, status: 'done', checkoutLink: 'google.com' });
             return res.status(400).send({ message: 'Update Failed' });
         }
         return res.status(400).send({ error: 'Bad Operation' });
