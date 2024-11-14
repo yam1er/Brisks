@@ -6,6 +6,7 @@ import sha1 from 'sha1';
 
 
 class UserController {
+    
     static async getUsers(req, res) {
         const users = await dbClient.getUsers()
         res.json(users);
