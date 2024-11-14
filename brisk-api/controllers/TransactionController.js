@@ -111,6 +111,7 @@ class TransactionController {
             console.error('Error fetching:', error);
         }
         data.userId = user._id;
+        data.type = 'Received BTC';
         const invoice = await dbClient.addInvoice(data);
         return res.status(201).json(invoice);
     }
@@ -130,16 +131,16 @@ class TransactionController {
             if (satAmount > user.balanceSat) { return res.status(400).send({ error: 'Unsufiscient BTC balance' }); }
             const update1 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceFiat: +fiatAmount } });
             const update2 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceSat: -satAmount } });
-            if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Update Successful' }); }
-            await dbClient.addInvoice({ id: 234, amount: satAmount, createdTime: 12345567, status: 'settled', checkoutLink: 'none' });
-            return res.status(400).send({ message: 'Update Failed' });
+            await dbClient.addInvoice({ id: 234, userId: user._id, type: 'Conversion Sat to Fiat', amount: satAmount, createdTime: 12345567, status: 'settled', checkoutLink: 'none' });
+            if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Conversion Successful' }); }
+            return res.status(400).send({ message: 'Conversion Failed' });
         } else if ( type === 'fiattosat') {
             if (fiatAmount > user.balanceFiat) { return res.status(400).send({ message: 'Unsufiscient Fiat balance' }); }
             const update1 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceFiat: -fiatAmount } });
             const update2 = await dbClient.updateUser({ _id: ObjectId(user._id) }, { $inc : { balanceSat: +satAmount } });
-            if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Update Successful' }); }
-            await dbClient.addInvoice({ id: 234, amount: satAmount, createdTime: 12345567, status: 'settled', checkoutLink: 'none' });
-            return res.status(400).send({ message: 'Update Failed' });
+            await dbClient.addInvoice({ id: 234, userId: user._id, type: 'Conversion Fiat to Sat', amount: satAmount, createdTime: 12345567, status: 'settled', checkoutLink: 'none' });
+            if (update1.matchedCount && update2.matchedCount) { return res.status(200).send({ message: 'Conversion Successful' }); }
+            return res.status(400).send({ message: 'Conversion Failed' });
         }
         return res.status(400).send({ error: 'Bad Operation' });
     }
