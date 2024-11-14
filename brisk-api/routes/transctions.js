@@ -79,6 +79,8 @@ transactionsRouter.post('/transactions', (req, res) => {
  *             description: Invoice created successfully
  *         400:
  *             description: Invoice not created
+ *         401:
+ *             description: Unthorized
  */
 transactionsRouter.post('/invoices', (req, res) => {
     TransactionController.createInvoice(req, res);
@@ -115,6 +117,8 @@ transactionsRouter.get('/rates', (req, res) => {
  *             description: Invoice list retrived successfully
  *         400:
  *             description: Failed
+ *         401:
+ *             description: Unthorized
  */
 transactionsRouter.get('/invoices', (req, res) => {
     TransactionController.getInvoices(req, res);
@@ -134,6 +138,8 @@ transactionsRouter.get('/invoices', (req, res) => {
  *             description: Invoice retrived successfully
  *         400:
  *             description: Failed
+ *         401:
+ *             description: Unthorized
  */
 transactionsRouter.get('/invoices/:id', (req, res) => {
     TransactionController.getInvoice(req, res);
