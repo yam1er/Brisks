@@ -139,6 +139,8 @@ usersRouter.get('/users/me', (req, res) => {
  *                   description: The user's username
  *       400:
  *         description: Bad request
+ *       401:
+ *         description: Unthorized
  */
 usersRouter.post('/users', (req, res) => {
     UserController.postNew(req, res);
